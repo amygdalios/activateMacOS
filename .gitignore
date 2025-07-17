@@ -1,0 +1,48 @@
+# Xcode
+DerivedData/
+*.xcworkspace
+xcuserdata/
+*.xccheckout
+*.xcuserstate
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# Swift Package Manager
+.build/
+Packages/
+.swiftpm/xcode/package.xcworkspace/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Spotlight files
+*.swp
+*.swo
+
+# Xcode automatic backup files
+*.moved-aside
+
+# User-specific
+*.orig
+.idea/
+.vscode/
+*.log
+
+# CocoaPods
+Pods/
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Build artifacts
+*.app
+*.dSYM
+*.ipa
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
