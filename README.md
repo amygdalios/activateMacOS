@@ -22,6 +22,13 @@ Useful for memes, screenshots, pranks, or custom setups.
 
 ---
 
+## 📸 Screenshots
+
+![Screenshot1](screenshots/ss1.png)
+![Screenshot2](screenshots/ss2.png)
+
+---
+
 ## 🛠️ Installation
 
 ### ✅ Option 1: Download DMG
