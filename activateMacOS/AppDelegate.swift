@@ -9,7 +9,7 @@ import Cocoa
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var window: NSWindow!
+    var overlayWindows: [NSWindow] = []
     var statusItem: NSStatusItem!
     var yOffset: CGFloat = 60
     var xOffset: CGFloat = -20 // Negative values offset from RIGHT edge
@@ -20,33 +20,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func showOverlay() {
-        let contentView = ContentView()
-        let hostingView = NSHostingView(rootView: contentView)
+        overlayWindows.removeAll()
 
-        window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 60),
-            styleMask: [.borderless],
-            backing: .buffered,
-            defer: false
-        )
+        for screen in NSScreen.screens {
+            let contentView = ContentView()
+            let hostingView = NSHostingView(rootView: contentView)
 
-        window.contentView = hostingView
-        window.isOpaque = false
-        window.backgroundColor = .clear
-        window.hasShadow = false
-        window.level = .floating
-        window.ignoresMouseEvents = true
-        window.collectionBehavior = [.canJoinAllSpaces, .stationary]
+            let window = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 320, height: 60),
+                styleMask: [.borderless],
+                backing: .buffered,
+                defer: false,
+                screen: screen
+            )
 
-        // Bottom-right position
-        if let screen = NSScreen.main {
+            window.contentView = hostingView
+            window.isOpaque = false
+            window.backgroundColor = .clear
+            window.hasShadow = false
+            window.level = .floating
+            window.ignoresMouseEvents = true
+            window.collectionBehavior = [.canJoinAllSpaces, .stationary]
+
+            // Position the window on this specific screen
             let screenRect = screen.visibleFrame
-            let x = screenRect.maxX - 320 - xOffset
+            let x = screenRect.maxX - 320 + xOffset
             let y = screenRect.minY + yOffset
             window.setFrameOrigin(NSPoint(x: x, y: y))
-        }
 
-        window.makeKeyAndOrderFront(nil)
+            window.makeKeyAndOrderFront(nil)
+            overlayWindows.append(window)
+        }
     }
 
     func setupMenuBarIcon() {
@@ -82,9 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let screenWidth = screen.visibleFrame.width
 
             let xOffsets: [(String, CGFloat)] = [
-                ("Left", -(screenWidth - 320 - 20)),
-                ("Center", -(screenWidth / 2 - 160)),
-                ("Right", -20),
+                ("20 px from right", -20),
                 ("100 px from right", -100),
                 ("200 px from right", -200)
             ]
@@ -110,11 +112,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     
     func repositionOverlay() {
-        if let screen = NSScreen.main {
+        for (index, screen) in NSScreen.screens.enumerated() {
+            guard overlayWindows.indices.contains(index) else { continue }
+
             let screenRect = screen.visibleFrame
             let x = screenRect.maxX - 320 + xOffset
             let y = screenRect.minY + yOffset
-            window.setFrameOrigin(NSPoint(x: x, y: y))
+            overlayWindows[index].setFrameOrigin(NSPoint(x: x, y: y))
         }
     }
     
